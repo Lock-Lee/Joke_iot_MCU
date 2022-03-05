@@ -6,12 +6,7 @@ void readFormMCU()
   {
     String received = mySerial.readStringUntil('\n');
     
-     if (!received.indexOf("readLux=")) {
-       Serial.println(received);
-      readLux = received.substring(8).toInt();
-
-
-    } else if (!received.indexOf("readTemp=")) {
+     if (!received.indexOf("readTemp=")) {
       Serial.println(received);
       readTemp = received.substring(9).toInt();
 

@@ -3,18 +3,18 @@ void door(int state)
   if (state == 1)
 
   {
-   
-    if (readLux + 2500 < set_lux_start && readLux < set_lux_end && set_lux_end > set_lux_start)
+
+    if (readLux + 500 < set_lux_start && readLux < set_lux_end && set_lux_end > set_lux_start)
     {
       Serial.println("on Door");
       rond = 2;
     }
-    else if (readLux + 2500 > set_lux_start && readLux > set_lux_end && set_lux_end > set_lux_start)
+    else if (readLux + 500 > set_lux_start && readLux > set_lux_end && set_lux_end > set_lux_start)
     {
       Serial.println("off Door");
       rond = 1;
     }
-    else if (readLux >= set_lux_start + 2500 && readLux <= set_lux_end + 2500)
+    else if (readLux >= set_lux_start + 500 && readLux <= set_lux_end + 500)
     {
       rond = 0;
     }
@@ -134,8 +134,6 @@ void doormanully(char state)
       }
       else if (sec > 12)
       {
-
-
 
         checkDoor = 1;
         status_door = 1;

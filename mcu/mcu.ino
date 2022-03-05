@@ -3,7 +3,7 @@
 #include <WiFiManager.h>
 #include <MicroGear.h>
 #include <SoftwareSerial.h>
-#include <BH1750FVI.h>
+
 
 
 
@@ -28,7 +28,7 @@ WiFiManager wm;
 
 WiFiClient client;
 // Create the Lightsensor instance
-BH1750FVI LightSensor(BH1750FVI::k_DevModeContLowRes);
+
 int timer = 0;
 MicroGear microgear(client);
 String getSplit(String data, char separator, int index);
@@ -54,14 +54,6 @@ String timeall;
 String setval;
 
 /* If a new message arrives, do this */
-uint16_t readLux() {
-
-  uint16_t lux = LightSensor.GetLightIntensity();
-  Serial.print("lux= ");
-  delay(100);
-  Serial.println(lux);
-  return lux;
-}
 
 
 
@@ -163,10 +155,9 @@ void setup()
   Serial.begin(9600);
   mySerial.begin(9600);
 
-  LightSensor.begin();
   dht.begin();
 
-
+  Serial.println("xxx");
   bool res;
   res = wm.autoConnect("SetWiFi"); // password protected ap
 
@@ -174,7 +165,7 @@ void setup()
   {
     write_Temp();
     write_Humidity();
-    write_Lux();
+ 
 
 
   }
@@ -214,6 +205,11 @@ void readFormUNO()
       Serial.println(received);
       setval = received.substring(7);
     }
+    if (!received.indexOf("readLux="))
+    {
+      Serial.println(received);
+      _readLux = received.substring(8).toInt();
+    }
     if (!received.indexOf("Reset"))
     {
       wm.resetSettings();
@@ -225,7 +221,7 @@ void loop()
 {
   write_Temp();
   write_Humidity();
-  write_Lux();
+  
   readFormUNO();
   if (microgear.connected())
   {
@@ -256,15 +252,7 @@ void loop()
   }
   delay(100);
 }
-void write_Lux() {
-  unsigned long currentMillis = millis();
-  _readLux =  readLux();
-  if (currentMillis - previousMillis > 2000) {
-    previousMillis = currentMillis;
-    mySerial.println((String)"readLux=" + _readLux);
-  }
 
-}
 void write_Humidity() {
   unsigned long currentMillis = millis();
   _readHumidity =  readHumidity();

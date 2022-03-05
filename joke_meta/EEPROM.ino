@@ -28,6 +28,7 @@ void getEPROM()
   address += sizeof(set_start1.hour);
   EEPROM.get(address, set_start1.min);
   address += sizeof(set_start1.min);
+
   EEPROM.get(address, set_end1.hour);
   address += sizeof(set_end1.hour);
   EEPROM.get(address, set_end1.min);

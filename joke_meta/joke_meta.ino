@@ -4,8 +4,8 @@
 #include <RealTimeClockDS1307.h>
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
-
-
+#include <BH1750FVI.h>
+BH1750FVI LightSensor(BH1750FVI::k_DevModeContLowRes);
 SoftwareSerial mySerial(2, 3); // RX, TX
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -17,17 +17,16 @@ unsigned long previousMillis = 0;
 long Millis = 0;
 long interval = 1000;
 int sec = 0;
-const byte ROWS = 4; //four rows
+const byte ROWS = 4; // four rows
 const byte COLS = 3; // four columns
 char keys[ROWS][COLS] = {
-  {'1', '2', '3'},
-  {'4', '5', '6'},
-  {'7', '8', '9'},
-  {'*', '0', '#'}
-};
+    {'1', '2', '3'},
+    {'4', '5', '6'},
+    {'7', '8', '9'},
+    {'*', '0', '#'}};
 
-byte rowPins[ROWS] = { 9, A3, A2, A0}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = {10, 8, A1};   //connect to the column pinouts of the keypad
+byte rowPins[ROWS] = {9, A3, A2, A0}; // connect to the row pinouts of the keypad
+byte colPins[COLS] = {10, 8, A1};     // connect to the column pinouts of the keypad
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 int chackmemu = 0;
@@ -39,7 +38,7 @@ void setEPROM();
 void readKeypad();
 void working();
 typedef struct
-{ // the time record
+{           // the time record
   int hour; // hour
   int min;  // minute
   int sec;  // second
@@ -79,8 +78,8 @@ int sec1 = 0;
 void checkWifi1();
 void setTime()
 {
-  RTC.setHours(16);
-  RTC.setMinutes(7);
+  RTC.setHours(21);
+  RTC.setMinutes(12);
   RTC.setSeconds(40);
   RTC.setClock();
 }
@@ -128,17 +127,18 @@ void show_time(void)
 void setup()
 {
   // put your setup code here, to run once:
-  //setTime();
+  // setTime();
+  getEPROM();
   lcd.init();
   lcd.backlight();
   Serial.begin(9600);
   mySerial.begin(9600);
+  LightSensor.begin();
   Serial.println("test");
   Wire.begin();
 
   lcd.backlight();
 
-  
   readFormMCU();
   pinMode(reLayMotorR, OUTPUT);
   pinMode(reLayMotorL, OUTPUT);
@@ -153,6 +153,7 @@ void loop()
 {
   setEPROM();
   readFormMCU();
+  readLux = LuxSensor();
   if (keypad.getKey())
   {
     lcd.clear();
@@ -182,18 +183,31 @@ void loop()
     setEPROM();
     unsigned long currentMillis = millis();
     int prev = 0;
-    if (currentMillis - prev > 1000) {
+    if (currentMillis - prev > 1000)
+    {
       previ = currentMillis;
       sec1++;
-      if (sec1 > 0 &&  sec1 < 3 ) {
-        mySerial.println((String) "status=" + status_door + "," + status_evap + "," + status_light + "," + status_pumpwater);
-      } else if (sec1 > 4 && sec1 < 5) {
+      if (sec1 > 0 && sec1 < 3)
+      {
+        mySerial.println((String) "readLux=" + readLux);
+      }
+      else if (sec1 > 4 && sec1 < 5)
+      {
         String time = (String)set_start1.hour + ":" + set_start1.min + "," + set_end1.hour + ":" + set_end1.min + "," + set_start2.hour + ":" + set_start2.min + "," + set_end2.hour + ":" + set_end2.min;
         mySerial.println((String) "time=" + time);
-      } else if (sec1 > 5) {
-        String setVal = (String) set_lux_start + "," + set_lux_end + "," + set_temp_start + "," + set_temp_end;
+      }
+      else if (sec1 > 5)
+      {
+        String setVal = (String)set_lux_start + "," + set_lux_end + "," + set_temp_start + "," + set_temp_end;
         mySerial.println((String) "setVal=" + setVal);
-      } else {
+      }
+      else if (sec1 > 6)
+      {
+        mySerial.println((String) "status=" + status_door + "," + status_evap + "," + status_light + "," + status_pumpwater);
+      }
+      else
+      {
+
         sec1 = 0;
       }
     }
@@ -214,7 +228,7 @@ unsigned long read_num(unsigned long nmax, int x, int y)
       key = keypad.getKey();
     } while (!key);
     if (key == '*' && i > -2)
-    { //check key '*'
+    { // check key '*'
       x = x - 1;
       lcd.setCursor(x, y);
       lcd.print(" ");
@@ -260,7 +274,7 @@ String getSplit(String data, char separator, int index)
 }
 void readSensor()
 {
-  
+
   lcd.setCursor(3, 1);
   lcd.print("Humidity = ");
   lcd.setCursor(14, 1);
