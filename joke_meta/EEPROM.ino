@@ -20,6 +20,11 @@ void setEPROM()
 
   EEPROM.put(address, set_temp_start);
   address += sizeof(set_temp_start);
+
+  EEPROM.put(address, set_temp_end);
+  address += sizeof(set_temp_end);
+  EEPROM.put(address, mode);
+  address += sizeof(mode);
 }
 void getEPROM()
 {
@@ -43,4 +48,8 @@ void getEPROM()
   address += sizeof(set_lux_end);
   EEPROM.get(address, set_temp_start);
   address += sizeof(set_temp_start);
+  EEPROM.get(address, set_temp_end);
+  address += sizeof(set_temp_end);
+  EEPROM.get(address, mode);
+  address += sizeof(mode);
 }

@@ -69,7 +69,7 @@ int reLayFan = 12;
 int led01 = 0;
 bool statetime1 = false;
 bool statetime2 = false;
-
+int mode = 0;
 int status_door = 0;
 int status_evap = 0;
 int status_light = 0;

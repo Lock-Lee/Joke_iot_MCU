@@ -5,17 +5,16 @@ void readFormMCU()
   if (mySerial.available())
   {
     String received = mySerial.readStringUntil('\n');
-    
-     if (!received.indexOf("readTemp=")) {
+
+    if (!received.indexOf("readTemp="))
+    {
       Serial.println(received);
       readTemp = received.substring(9).toInt();
-
-
-    } else if (!received.indexOf("readHumidity=")) {
-       Serial.println(received);
+    }
+    else if (!received.indexOf("readHumidity="))
+    {
+      Serial.println(received);
       readHum = received.substring(13).toInt();
-
-
     }
     //อ่าน จาก nodeMCU ตาม part ที่ส่งมา
     if (!received.indexOf("setLux="))
@@ -30,8 +29,8 @@ void readFormMCU()
     {
       String str = received.substring(6);
 
-      String start =  getSplit(str, ',', 0);
-      String end =  getSplit(str, ',', 1);
+      String start = getSplit(str, ',', 0);
+      String end = getSplit(str, ',', 1);
 
       String path1 = getSplit(start, ':', 0);
       String path2 = getSplit(start, ':', 1);
@@ -46,8 +45,8 @@ void readFormMCU()
     else if (!received.indexOf("time2="))
     {
       String str = received.substring(6);
-      String start =  getSplit(str, ',', 0);
-      String end =  getSplit(str, ',', 1);
+      String start = getSplit(str, ',', 0);
+      String end = getSplit(str, ',', 1);
       String path1 = getSplit(start, ':', 0);
       String path2 = getSplit(start, ':', 1);
       String path3 = getSplit(end, ':', 0);
@@ -60,8 +59,8 @@ void readFormMCU()
     else if (!received.indexOf("time3="))
     {
       String str = received.substring(6);
-      String start =  getSplit(str, ',', 0);
-      String end =  getSplit(str, ',', 1);
+      String start = getSplit(str, ',', 0);
+      String end = getSplit(str, ',', 1);
       String path1 = getSplit(start, ':', 0);
       String path2 = getSplit(start, ':', 1);
       String path3 = getSplit(end, ':', 0);
@@ -85,17 +84,18 @@ void readFormMCU()
     else if (!received.indexOf("Door="))
     {
       String str = received.substring(5);
-
-
-      if (!str.indexOf("on"))
+      if (mode == 0)
       {
+        if (!str.indexOf("on"))
+        {
 
-        doormanully('1');
-      }
-      if (!str.indexOf("off"))
-      {
+          doormanully('1');
+        }
+        if (!str.indexOf("off"))
+        {
 
-        doormanully('2');
+          doormanully('2');
+        }
       }
     }
     else if (!received.indexOf("Evap="))
@@ -103,17 +103,21 @@ void readFormMCU()
       String str = received.substring(5);
       Serial.println(str);
       status_evap = str.toInt();
-      digitalWrite(reLayFan, status_evap);
-      digitalWrite(pumpvax, status_evap);
+      if (mode == 0)
+      {
+        digitalWrite(reLayFan, status_evap);
+        digitalWrite(pumpvax, status_evap);
+      }
     }
     else if (!received.indexOf("light="))
     {
       String str = received.substring(6);
 
       status_light = str.toInt();
-
-
-      digitalWrite(reLayLed, status_light);
+      if (mode == 0)
+      {
+        digitalWrite(reLayLed, status_light);
+      }
     }
     else if (!received.indexOf("pumpwater="))
     {
@@ -121,9 +125,16 @@ void readFormMCU()
       Serial.print("water=");
       Serial.println(str);
       status_pumpwater = str.toInt();
+      if (mode == 0)
+      {
+        digitalWrite(pumpwater, status_pumpwater);
+      }
+    }
+    else if (!received.indexOf("mode="))
+    {
+      String str = received.substring(5);
 
-
-      digitalWrite(pumpwater, status_pumpwater);
+      mode = str.toInt();
     }
   }
 }

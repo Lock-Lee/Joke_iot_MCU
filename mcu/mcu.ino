@@ -4,9 +4,6 @@
 #include <MicroGear.h>
 #include <SoftwareSerial.h>
 
-
-
-
 #include "DHT.h"
 #define DHTPIN D5
 #define DHTTYPE DHT11
@@ -45,7 +42,6 @@ long previousMillis1 = 0;
 long previousMillis2 = 0;
 long interval = 2500;
 
-
 String Set_Lux;
 String Set_Temp;
 String status_all;
@@ -55,16 +51,16 @@ String setval;
 
 /* If a new message arrives, do this */
 
-
-
-int readHumidity() {
+int readHumidity()
+{
   int h = dht.readHumidity();
   Serial.print("h= ");
 
   Serial.println(h);
   return h;
 }
-int readTemperature() {
+int readTemperature()
+{
   int t = dht.readTemperature();
   Serial.print("t= ");
   //
@@ -132,16 +128,21 @@ void onMsghandler(char *topic, uint8_t *msg, unsigned int msglen)
     microgear.publish("/Jokeiot/timeall", timeall);
     delay(1000);
     microgear.publish("/Jokeiot/setall", setval);
-
-  } else if (top == "/Jokeiot/joke/readsensor") {
+  }
+  else if (top == "/Jokeiot/joke/readsensor")
+  {
 
     microgear.publish("/Jokeiot/getSensor", (String)_readLux + "," + _readTemp + "," + _readHumidity);
   }
-  else if (top == "/Jokeiot/joke/readstatus") {
+  else if (top == "/Jokeiot/joke/readstatus")
+  {
     microgear.publish("/Jokeiot/status", status_all);
   }
+  else if (top == "/Jokeiot/joke/mode")
+  {
+    mySerial.println((String) "mode=" + message);
+  }
 }
-
 
 void onConnected(char *attribute, uint8_t *msg, unsigned int msglen)
 {
@@ -165,20 +166,16 @@ void setup()
   {
     write_Temp();
     write_Humidity();
- 
-
-
   }
   else
   {
-    //if you get here you have connected to the WiFi
+    // if you get here you have connected to the WiFi
 
     microgear.on(MESSAGE, onMsghandler);
     microgear.on(CONNECTED, onConnected);
     microgear.init(KEY, SECRET, ALIAS);
 
     microgear.connect(APPID);
-
   }
 }
 void readFormUNO()
@@ -188,12 +185,9 @@ void readFormUNO()
   {
     String received = mySerial.readStringUntil('\n');
 
-
-
     if (!received.indexOf("status="))
     {
       status_all = received.substring(7);
-
     }
     if (!received.indexOf("time="))
     {
@@ -221,24 +215,14 @@ void loop()
 {
   write_Temp();
   write_Humidity();
-  
+
   readFormUNO();
   if (microgear.connected())
   {
 
     microgear.loop();
 
-    if (timer >= 1000)
-    {
-
-
-      delay(100);
-
-      timer = 0;
-    }
-    else
-      timer += 100;
-  }
+  
   else
   {
     Serial.println("connection lost, reconnect...");
@@ -253,27 +237,27 @@ void loop()
   delay(100);
 }
 
-void write_Humidity() {
+void write_Humidity()
+{
   unsigned long currentMillis = millis();
-  _readHumidity =  readHumidity();
-  if (currentMillis - previousMillis1 > 2500) {
+  _readHumidity = readHumidity();
+  if (currentMillis - previousMillis1 > 2500)
+  {
     previousMillis1 = currentMillis;
-    mySerial.println((String)"readHumidity=" + _readHumidity);
+    mySerial.println((String) "readHumidity=" + _readHumidity);
   }
-
 }
-void write_Temp() {
+void write_Temp()
+{
   unsigned long currentMillis = millis();
-  _readTemp =  readTemperature();
+  _readTemp = readTemperature();
 
-  if (currentMillis - previousMillis2 > 3000) {
+  if (currentMillis - previousMillis2 > 3000)
+  {
     previousMillis2 = currentMillis;
-    mySerial.println((String)"readTemp=" + _readTemp);
+    mySerial.println((String) "readTemp=" + _readTemp);
   }
-
-
 }
-
 
 String getSplit(String data, char separator, int index)
 {
