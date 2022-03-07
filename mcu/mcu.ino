@@ -48,7 +48,8 @@ String status_all;
 
 String timeall;
 String setval;
-
+void write_Temp();
+void write_Humidity();
 /* If a new message arrives, do this */
 
 int readHumidity()
@@ -222,7 +223,7 @@ void loop()
 
     microgear.loop();
 
-  
+  }
   else
   {
     Serial.println("connection lost, reconnect...");
