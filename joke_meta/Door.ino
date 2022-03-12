@@ -6,13 +6,13 @@ void door(int state)
 
     if (readLux + 500 < set_lux_start && readLux < set_lux_end && set_lux_end > set_lux_start)
     {
-      Serial.println("off Door");
-      rond = 1;
+      Serial.println("on Door");
+      rond = 2;
     }
     else if (readLux + 500 > set_lux_start && readLux > set_lux_end && set_lux_end > set_lux_start)
     {
-      Serial.println("on Door");
-      rond = 2;
+      Serial.println("off Door");
+      rond = 1;
     }
     else if (readLux >= set_lux_start + 500 && readLux <= set_lux_end + 500)
     {
@@ -30,12 +30,12 @@ void door(int state)
           previousMillis = currentMillis;
           sec++;
         }
-        else if (sec < 12 && checkDoor == 0)
+        else if (sec < 16 && checkDoor == 0)
         {
-          digitalWrite(reLayMotorR, 1);
-          digitalWrite(reLayMotorL, 0);
+          digitalWrite(reLayMotorR, 0);
+          digitalWrite(reLayMotorL, 1);
         }
-        else if (sec > 12)
+        else if (sec > 16)
         {
           status_door = 1;
           checkDoor = 1;
@@ -61,13 +61,13 @@ void door(int state)
           previousMillis = currentMillis;
           sec++;
         }
-        else if (sec < 12 && checkDoor == 1)
+        else if (sec < 16 && checkDoor == 1)
         {
 
-          digitalWrite(reLayMotorR, 0);
-          digitalWrite(reLayMotorL, 1);
+          digitalWrite(reLayMotorR, 1);
+          digitalWrite(reLayMotorL, 0);
         }
-        else if (sec > 12)
+        else if (sec > 16)
         {
           checkDoor = 0;
           sec = 0;
