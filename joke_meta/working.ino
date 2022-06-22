@@ -72,15 +72,7 @@ void openFan(int state)
       digitalWrite(pumpvax, 1);
       status_evap = 1;
     }
-    //    else
-    //    {
-    //      Serial.println("endevap");
-    //      digitalWrite(pumpvax, 0);
-    //      digitalWrite(reLayFan, 0);
-    //      status_evap = 0;
-    //      status_light = 0;
-    //    }
-  }
+    }
   if (state == 0)
   {
     digitalWrite(pumpvax, 0);

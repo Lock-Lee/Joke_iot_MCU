@@ -35,7 +35,22 @@ void readKeypad()
     Serial.println((String) "timeend2=" + set_end2.hour + ":" + set_end2.min);
     lcd.clear();
   }
+  else if (key == '5')
+  {
+    lcd.clear();
+    settime(3);
 
+    readtimeprevi(3);
+    set_start3.hour = read_num(23, 3, 1);
+    set_start3.min = read_num(59, 6, 1);
+    Serial.println((String) "timestart3=" + set_start3.hour + ":" + set_start3.min);
+
+    readtimeprevi(3);
+    set_end3.hour = read_num(23, 3, 3);
+    set_end3.min = read_num(59, 6, 3);
+    Serial.println((String) "timeend2=" + set_end3.hour + ":" + set_end3.min);
+    lcd.clear();
+  }
   else if (key == '3')
   {
     /// set lux
@@ -59,6 +74,7 @@ void readKeypad()
     mySerial.println((String) "setTemp=" + set_temp_start + "," + set_temp_end);
     lcd.clear();
   }
+
   else if (key == '6')
   {
 

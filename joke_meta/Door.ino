@@ -4,17 +4,17 @@ void door(int state)
 
   {
 
-    if (readLux + 500 < set_lux_start && readLux < set_lux_end && set_lux_end > set_lux_start)
+    if (readLux  < set_lux_start && readLux < set_lux_end && set_lux_end > set_lux_start)
     {
       Serial.println("on Door");
       rond = 2;
     }
-    else if (readLux + 500 > set_lux_start && readLux > set_lux_end && set_lux_end > set_lux_start)
+    else if (readLux  > set_lux_start && readLux > set_lux_end && set_lux_end > set_lux_start)
     {
       Serial.println("off Door");
       rond = 1;
     }
-    else if (readLux >= set_lux_start + 500 && readLux <= set_lux_end + 500)
+    else if (readLux >= set_lux_start  && readLux <= set_lux_end )
     {
       rond = 0;
     }
@@ -80,7 +80,7 @@ void door(int state)
       }
       if (led01 == 1 && checkDoor == 0)
       {
-        if (readLux < (set_lux_end + 17000))
+        if (readLux < (set_lux_end))
         {
           digitalWrite(reLayLed, 1);
           status_light = 1;

@@ -5,6 +5,10 @@
 #include <EEPROM.h>
 #include <LiquidCrystal_I2C.h>
 #include <BH1750FVI.h>
+#include "DHT.h"
+#define DHTPIN D5
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
 BH1750FVI LightSensor(BH1750FVI::k_DevModeContLowRes);
 SoftwareSerial mySerial(2, 3); // RX, TX
 
@@ -14,6 +18,9 @@ unsigned long pre = 0;
 void openFan(int state);
 int s = 0, m = 0;
 unsigned long previousMillis = 0;
+unsigned long time = 0;
+int _readTemp = 0;
+int _readHumidity = 0;
 long Millis = 0;
 long interval = 1000;
 int sec = 0;
@@ -136,6 +143,7 @@ void setup()
   LightSensor.begin();
   Serial.println("test");
   Wire.begin();
+  dht.begin();
 
   lcd.backlight();
 

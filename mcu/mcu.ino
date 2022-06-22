@@ -138,6 +138,7 @@ void onMsghandler(char *topic, uint8_t *msg, unsigned int msglen)
   else if (top == "/Jokeiot/joke/readstatus")
   {
     microgear.publish("/Jokeiot/status", status_all);
+   delay(1000);
   }
   else if (top == "/Jokeiot/joke/mode")
   {
